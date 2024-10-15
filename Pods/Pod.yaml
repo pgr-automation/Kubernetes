@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-1
+  labels:
+    app: app-1
+spec:
+  containers:
+    - name: app-1
+      image: nginx:latest
+      volumeMounts:
+        - name: nginx-logs
+          mountPath: /var/log/nginx/
+
+  volumes:
+    - name: nginx-logs
+      persistentVolumeClaim:
+        claimName: nfs-pvc-app1
+

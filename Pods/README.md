@@ -26,13 +26,23 @@ Pods are defined using YAML or JSON manifest files. A simple pod definition migh
 apiVersion: v1
 kind: Pod
 metadata:
-  name: my-pod
+  name: app-1
+  labels:
+    app: app-1
 spec:
   containers:
-  - name: my-container
-    image: my-image:latest
-    ports:
-    - containerPort: 80
+    - name: app-1
+      image: nginx:latest
+      volumeMounts:
+        - name: nginx-logs
+          mountPath: /var/log/nginx/
+
+  volumes:
+    - name: nginx-logs
+      persistentVolumeClaim:
+        claimName: nfs-pvc-app1
+
+
 ```
 ### Use NFS storage
 
