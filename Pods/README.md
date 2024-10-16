@@ -82,9 +82,6 @@ spec:
       storage: 10Gi  # Adjust to match the PV size
 ```
 
-## Commands
-
-
 
 # Kubernetes Pods Issues and Troubleshooting Guide
 
