@@ -94,7 +94,7 @@ spec:
 
 ### Use Cases for Different Service Types
 
-**ClusterIP** : For communication within the cluster (e.g., microservices talking to each other).
-**NodePort** : For exposing services directly to external clients, useful for development and testing.
-**LoadBalancer** : Best for production use in cloud environments where a managed load balancer is needed.
-**ExternalName** : For linking external services that are outside the Kubernetes cluster.**
+1. **ClusterIP** : For communication within the cluster (e.g., microservices talking to each other).
+2. **NodePort** : For exposing services directly to external clients, useful for development and testing.
+3. **LoadBalancer** : Best for production use in cloud environments where a managed load balancer is needed.
+4. **ExternalName** : For linking external services that are outside the Kubernetes cluster.**
