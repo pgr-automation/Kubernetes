@@ -169,3 +169,14 @@ kubectl describe node <node-name>
 kubectl delete pod <pod-name> -n <namespace>
 
 ```
+
+## Imperative Commands with Kubectl: -
+
+* Create an NGINX Pod
+```bash
+kubectl run nginx --image=nginx
+```
+* Generate POD Manifest YAML file (-o yaml). Don’t create it(–dry-run)
+```bash
+kubectl run nginx --image=nginx --dry-run=client -o yaml
+```
