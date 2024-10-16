@@ -49,3 +49,12 @@ Manages external access to services, typically HTTP. It provides load balancing,
 Define rules for controlling the communication between pods and/or services.
 
 These components work together to provide a robust and scalable platform for deploying and managing containerized applications in production environments.
+
+
+| Resource Type  | Description                                                                 | Use Case                                                   | Scaling       | Pod Identity                          | Network Identity             |
+|----------------|-----------------------------------------------------------------------------|------------------------------------------------------------|---------------|---------------------------------------|------------------------------|
+| **Pod**        | The smallest deployable unit in Kubernetes, representing a single instance of a running process. | Running a single instance of an application or service.    | Manual scaling | No persistent identity, new IP on restart | Unique IP per Pod.            |
+| **Deployment** | Manages a ReplicaSet, allowing you to declaratively update Pods.           | Rollouts and rollbacks of applications.                     | Scales Pods up and down automatically. | Maintains the same Pod identity over updates. | Stable endpoint via Service. |
+| **ReplicaSet** | Ensures that a specified number of Pod replicas are running at all times.  | Maintaining a stable set of replica Pods.                   | Automatically scales Pods based on defined replicas. | No persistent identity, manages Pods by label selector. | Unique IP per Pod.            |
+| **DaemonSet**  | Ensures that all (or some) Nodes run a copy of a Pod.                      | Running a service on all nodes, like monitoring or logging. | Automatically scales based on Nodes. | Unique Pod per Node, maintains identity. | Unique IP per Pod.            |
+| **StatefulSet**| Manages the deployment and scaling of a set of Pods, providing guarantees about the ordering and uniqueness of these Pods. | Stateful applications, like databases, requiring stable identity and storage. | Manual scaling; Pods are created in order. | Stable identity across restarts, unique ordinal index. | Stable network identity; DNS for each Pod. |
