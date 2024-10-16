@@ -90,6 +90,8 @@ kubectl scale deployment nginx --replicas=4
 kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > nginx-deployment.yaml
 ```
 
+
+### Eg: 
 ```yaml
 apiVersion: apps/v1
 kind: Deployment 
