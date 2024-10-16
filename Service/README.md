@@ -83,7 +83,8 @@ spec:
   type: ExternalName
   externalName: lvm-service.lvm-app.svc.cluster.local
 ```
-*  Note: externalName: ```bash <service>.<namespace>.svc.cluster.local
+```bash
+ Note: externalName: <service>.<namespace>.svc.cluster.local
 ```
 
 
