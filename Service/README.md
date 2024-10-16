@@ -88,9 +88,9 @@ spec:
 ```
 
 
-**selector** : Specifies which Pods the service will route to.
-**port** : The port that the service exposes.
-**targetPort** : The port on the Pod that receives the traffic.
+1. **selector** : Specifies which Pods the service will route to.
+2. **port** : The port that the service exposes.
+3. **targetPort** : The port on the Pod that receives the traffic.
 
 ### Use Cases for Different Service Types
 
