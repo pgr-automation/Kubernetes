@@ -131,28 +131,43 @@ This guide provides an overview of common issues encountered with Kubernetes pod
 
 Use the following commands to check the issues of the pod:
 
-```bash
 1. Check Pod Status
+```bash
+
 kubectl get pods
-
+```
 2. Describe the Pod
-kubectl describe pod <pod-name>
+```bash
 
+kubectl describe pod <pod-name>
+```
 3. Check Pod Logs
+```bash
+
 kubectl logs <pod-name>
+```
 
 4. If the pod has multiple containers, specify the container:
+```bash
+
 kubectl logs <pod-name> -c <container-name>
+```
 
 4. Check Resource Usage
+```bash
+
 kubectl top pod <pod-name>
-
+```
 5. Check Events
+```bash
+
 kubectl get events --sort-by=.metadata.creationTimestamp
-
+```
 6. Review Resource Configurations
-kubectl get pod <pod-name> -n <namespace> -o yaml
+```bash
 
+kubectl get pod <pod-name> -n <namespace> -o yaml
+```
 7. Validate Image Availability
 If facing ImagePullBackOff issues, verify that the image name is correct and that the image is available in the specified container registry. Check authentication settings if using private registries.
 
@@ -162,15 +177,19 @@ If the pod cannot connect to other services or databases, ensure that network po
 9. Examine Node Conditions
 
     If a pod is stuck in Pending, it may be due to insufficient resources on the node. Check the node status:
+```bash
+
 kubectl get nodes
 kubectl describe node <node-name>
-
+```
 10. Restart the Pod
+```bash
 kubectl delete pod <pod-name> -n <namespace>
 
 ```
 
 ## Imperative Commands with Kubectl: -
+
 
 * Create an NGINX Pod
 ```bash
