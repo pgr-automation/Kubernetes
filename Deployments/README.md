@@ -58,3 +58,34 @@ kubectl get nodes
 ```bash
 kubectl describe rs <replicaset-name>
 ```
+
+## Imperative Commands with Kubectl:-
+
+* Create a deployment
+
+```bash
+kubectl create deployment --image=nginx nginx
+```
+* Generate Deployment YAML file (-o yaml). Don’t create it(–dry-run)
+
+```bash
+kubectl create deployment --image=nginx nginx --dry-run=client -o yaml
+```
+
+* Generate Deployment with 4 Replicas
+
+```bash
+kubectl create deployment nginx --image=nginx --replicas=4
+``` 
+
+* You can also scale a deployment using the kubectl scale command.
+
+```bash
+kubectl scale deployment nginx --replicas=4 
+```
+
+* Another way to do this is to save the YAML definition to a file and modify
+
+```bash
+kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > nginx-deployment.yaml
+```
