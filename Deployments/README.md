@@ -89,3 +89,46 @@ kubectl scale deployment nginx --replicas=4
 ```bash
 kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > nginx-deployment.yaml
 ```
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: myapp-replicaset
+  labels:
+    app: myapp_r
+    type: front-end_r
+
+spec:
+  template:
+    metadata:
+      name: myapp-replicaset
+      labels:
+        app: myapp_r
+        type: front-end_r
+    spec:
+      containers:
+      - name: nginx-myapp-replicaset
+        image: nginx
+  replicas: 4
+  selector:
+    matchLabels:
+      type: front-end_r
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deploy-service
+
+spec:
+  selector: 
+      type: front-end_r
+  type: NodePort
+  ports:
+    - nodePort: 30124
+      port: 80
+      targetPort: 80
+```
