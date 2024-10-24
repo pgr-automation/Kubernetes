@@ -59,78 +59,71 @@ kubectl get nodes
 kubectl describe rs <replicaset-name>
 ```
 
-## Imperative Commands with Kubectl:-
+# Imperative Commands with Kubectl:-
 
-* Create a deployment
+###  1. Create a Deployment
 
 ```bash
-kubectl create deployment --image=nginx nginx
+kubectl create deployment <deployment-name> --image=<image-name>
 ```
-* Generate Deployment YAML file (-o yaml). Don’t create it(–dry-run)
-
+### 2. Scale a Deployment
 ```bash
-kubectl create deployment --image=nginx nginx --dry-run=client -o yaml
+kubectl scale deployment <deployment-name> --replicas=<number-of-replicas>
+
+kubectl scale deployment nginx-deployment --replicas=3
+
+```
+### 3. Update a Deployment (Image Update)
+```bash
+kubectl set image deployment/<deployment-name> <container-name>=<new-image>
+
+kubectl set image deployment/nginx-deployment nginx=nginx:1.16
+
+```
+### 4. Restart a Deployment
+```bash
+kubectl rollout restart deployment <deployment-name>
+
+kubectl rollout restart deployment nginx-deployment
+```
+### 5. Pause a Deployment
+```bash
+kubectl rollout pause deployment <deployment-name>
+
+kubectl rollout pause deployment nginx-deployment
+```
+### 6. Resume a Deployment
+```bash
+kubectl rollout resume deployment <deployment-name>
+
+kubectl rollout resume deployment nginx-deployment
+
 ```
 
-* Generate Deployment with 4 Replicas
-
+### 7. Check Deployment Status
 ```bash
-kubectl create deployment nginx --image=nginx --replicas=4
-``` 
+kubectl rollout status deployment <deployment-name>
 
-* You can also scale a deployment using the kubectl scale command.
+kubectl rollout status deployment nginx-deployment
 
+```
+### 8. Undo a Deployment Update (Rollback)
 ```bash
-kubectl scale deployment nginx --replicas=4 
+kubectl rollout undo deployment <deployment-name>
+
+kubectl rollout undo deployment nginx-deployment
 ```
 
-* Another way to do this is to save the YAML definition to a file and modify
-
+### 9. Delete a Deployment
 ```bash
-kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > nginx-deployment.yaml
+kubectl delete deployment <deployment-name>
+
+kubectl delete deployment nginx-deployment
 ```
 
+### 10. Expose a Deployment (Create a Service)
+```bash
+kubectl expose deployment <deployment-name> --port=<port> --target-port=<target-port> --type=<service-type>
 
-### Eg: 
-```yaml
-apiVersion: apps/v1
-kind: Deployment 
-metadata:
-  name: myapp-replicaset
-  labels:
-    app: myapp_r
-    type: front-end_r
-
-spec:
-  template:
-    metadata:
-      name: myapp-replicaset
-      labels:
-        app: myapp_r
-        type: front-end_r
-    spec:
-      containers:
-      - name: nginx-myapp-replicaset
-        image: nginx
-  replicas: 4
-  selector:
-    matchLabels:
-      type: front-end_r
-
-
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: deploy-service
-
-spec:
-  selector: 
-      type: front-end_r
-  type: NodePort
-  ports:
-    - nodePort: 30124
-      port: 80
-      targetPort: 80
+kubectl expose deployment nginx-deployment --port=80 --target-port=80 --type=LoadBalancer
 ```
