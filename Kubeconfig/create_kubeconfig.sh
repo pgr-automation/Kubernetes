@@ -106,18 +106,19 @@ echo "kubeconfig file generated at $KUBECONFIG_FILE"
 # Step 7: Verify kubeconfig access
 export KUBECONFIG=$KUBECONFIG_FILE
 echo "Verifying access with the generated kubeconfig..."
-kubectl get pods -n $NAMESPACE
-kubectl get services -n $NAMESPACE
-kubectl get deployments -n $NAMESPACE
-kubectl get secrets -n $NAMESPACE
-kubectl get configmaps -n $NAMESPACE
-kubectl get persistentvolumes -n $NAMESPACE
-kubectl get persistentvolumeclaims -n $NAMESPACE
-kubectl get daemonsets -n $NAMESPACE
-kubectl get replicationcontrollers -n $NAMESPACE
-kubectl get replicasets -n $NAMESPACE
-kubectl get statefulsets -n $NAMESPACE
-kubectl get horizontalpodautoscalers -n $NAMESPACE
-kubectl get cronjobs -n $NAMESPACE
-kubectl get jobs -n $NAMESPACE
+kubectl get pods -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get services -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get deployments -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get secrets -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get configmaps -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get persistentvolumes -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get persistentvolumeclaims -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get daemonsets -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get replicationcontrollers -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get replicasets -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get statefulsets -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get horizontalpodautoscalers -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get cronjobs -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl get jobs -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
+kubectl delete deployment nginx -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
 
