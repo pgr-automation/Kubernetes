@@ -106,6 +106,7 @@ echo "kubeconfig file generated at $KUBECONFIG_FILE"
 # Step 7: Verify kubeconfig access
 export KUBECONFIG=$KUBECONFIG_FILE
 echo "Verifying access with the generated kubeconfig..."
+kubectl create deployment nginx --image=nginx -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
 kubectl get pods -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
 kubectl get services -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
 kubectl get deployments -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
