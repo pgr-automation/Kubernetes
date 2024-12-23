@@ -8,8 +8,10 @@ ROLEBINDING_NAME="aem-full-access-binding"
 KUBECONFIG_FILE="aem-kubeconfig.yaml"
 
 # Step 1: Create Service Account
-echo "Creating Service Account in the namespace ${NAMESPACE}..."
+echo "Creating namespace ${NAMESPACE}..."
 kubectl create namespace $NAMESPACE
+
+echo "Creating Service Account in the namespace ${NAMESPACE}..."
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: ServiceAccount
@@ -33,6 +35,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  namespace: $NAMESPACE
   name: $ROLE_NAME
 rules:
   - apiGroups: [""]
@@ -108,7 +111,7 @@ kubectl get services -n $NAMESPACE
 kubectl get deployments -n $NAMESPACE
 kubectl get secrets -n $NAMESPACE
 kubectl get configmaps -n $NAMESPACE
-kubectl get persistentvolumes
+kubectl get persistentvolumes -n $NAMESPACE
 kubectl get persistentvolumeclaims -n $NAMESPACE
 kubectl get daemonsets -n $NAMESPACE
 kubectl get replicationcontrollers -n $NAMESPACE
@@ -117,3 +120,4 @@ kubectl get statefulsets -n $NAMESPACE
 kubectl get horizontalpodautoscalers -n $NAMESPACE
 kubectl get cronjobs -n $NAMESPACE
 kubectl get jobs -n $NAMESPACE
+
