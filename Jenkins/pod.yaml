@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    buildUrl: https://192.168.1.120:8070/job/agent-test/10/
+    kubernetes.jenkins.io/last-refresh: "1734554257092"
+    runUrl: job/agent-test/10/
+  creationTimestamp: "2024-12-18T20:37:37Z"
+  labels:
+    jenkins: k8-jenkins
+    jenkins/label: k8-jenkins
+    jenkins/label-digest: de321ea4bbcca37a016a96daa11aae417d8e9196
+    kubernetes.jenkins.io/controller: https___192_168_1_120_8070x
+  name: k8-jenkins-41c7z-zxm1v
+  namespace: default
+  resourceVersion: "1425349"
+  uid: 8fb52707-e168-4510-9ad9-e8de3859528a
+spec:
+  containers:
+  - env:
+    - name: JENKINS_SECRET
+      value: 4a5d6e47c062c6ce419386634ed167a81741327c7ffeb6e051e9bbc5b57659d9
+    - name: JENKINS_AGENT_NAME
+      value: k8-jenkins-41c7z-zxm1v
+    - name: REMOTING_OPTS
+      value: -noReconnectAfter 1d
+    - name: JENKINS_NAME
+      value: k8-jenkins-41c7z-zxm1v
+    - name: JENKINS_AGENT_WORKDIR
+      value: /home/jenkins/agent
+    - name: JENKINS_URL
+      value: https://192.168.1.120:8070/
+    image: jenkins/inbound-agent:3283.v92c105e0f819-3
+    imagePullPolicy: IfNotPresent
+    name: jnlp
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /home/jenkins/agent
+      name: workspace-volume
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-jw59j
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeSelector:
+    kubernetes.io/os: linux
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Never
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - emptyDir: {}
+    name: workspace-volume
+  - name: kube-api-access-jw59j
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2024-12-18T20:37:37Z"
+    message: '0/2 nodes are available: 1 Insufficient cpu, 1 node(s) had untolerated
+      taint {node-role.kubernetes.io/control-plane: }. preemption: 0/2 nodes are available:
+      1 No preemption victims found for incoming pod, 1 Preemption is not helpful
+      for scheduling..'
+    reason: Unschedulable
+    status: "False"
+    type: PodScheduled
+  phase: Pending
+  qosClass: Burstable

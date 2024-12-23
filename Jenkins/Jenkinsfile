@@ -1,0 +1,18 @@
+pipeline {
+    agent {
+        kubernetes {
+            label 'k8-jenkins'
+        }
+    }
+    stages{
+        stage('testing'){
+            steps {
+                script {
+                    sh """
+                    echo "testing agent"
+                    """
+                }
+            }
+        }
+    }
+}
