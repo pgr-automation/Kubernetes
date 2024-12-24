@@ -1,84 +1,60 @@
 #!/bin/bash
 
-# Set namespace and service account name
-NAMESPACE="aem"
-SERVICE_ACCOUNT="aem-user"
+# Set namespace and user name
+USERNAME="aem-user"
 ROLE_NAME="aem-full-access-role"
 ROLEBINDING_NAME="aem-full-access-binding"
 KUBECONFIG_FILE="aem-kubeconfig.yaml"
 
-# Step 1: Create Service Account
+# Step 1: Create Namespace
 echo "Creating namespace ${NAMESPACE}..."
 kubectl create namespace $NAMESPACE
 
-echo "Creating Service Account in the namespace ${NAMESPACE}..."
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: $SERVICE_ACCOUNT
-  namespace: $NAMESPACE
----
-apiVersion: v1
-kind: Secret
-metadata:
-  namespace: $NAMESPACE
-  name: $SERVICE_ACCOUNT-token
-  annotations:
-    kubernetes.io/service-account.name: $SERVICE_ACCOUNT
-type: kubernetes.io/service-account-token
-EOF
-
-# Step 2: Create ClusterRole with Full Privileges
-echo "Creating ClusterRole with full privileges across the cluster..."
+# Step 2: Create Role with Full Privileges (instead of ClusterRole for user-based RBAC)
+echo "Creating Role with full privileges in the namespace ${NAMESPACE}..."
 cat <<EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
-  namespace: $NAMESPACE
   name: $ROLE_NAME
 rules:
   - apiGroups: [""]
     resources: ["pods", "services", "deployments", "replicationcontrollers", "replicasets", "persistentvolumes", "persistentvolumeclaims", "secrets", "configmaps", "pods/log"]
-    verbs: ["get", "list", "create", "update", "delete"]
+    verbs: ["get", "list"]
   - apiGroups: ["apps"]
     resources: ["daemonsets", "deployments", "replicasets", "statefulsets"]
-    verbs: ["get", "list", "create", "update", "delete"]
+    verbs: ["get", "list"]
   - apiGroups: ["autoscaling"]
     resources: ["horizontalpodautoscalers"]
-    verbs: ["get", "list", "create", "update", "delete"]
+    verbs: ["get", "list"]
   - apiGroups: ["batch"]
     resources: ["cronjobs", "jobs"]
-    verbs: ["get", "list", "create", "update", "delete"]
+    verbs: ["get", "list"]
 EOF
 
-# Step 3: Create ClusterRoleBinding to bind ClusterRole to Service Account
-echo "Creating ClusterRoleBinding to bind ClusterRole $ROLE_NAME to Service Account $SERVICE_ACCOUNT..."
+# Step 3: Create RoleBinding to bind Role to User
+echo "Creating RoleBinding to bind Role $ROLE_NAME to User $USERNAME..."
 cat <<EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: RoleBinding
 metadata:
   name: $ROLEBINDING_NAME
+  namespace: $NAMESPACE
 subjects:
-  - kind: ServiceAccount
-    name: $SERVICE_ACCOUNT
-    namespace: $NAMESPACE
+  - kind: User
+    name: $USERNAME  # The user you want to bind
+    apiGroup: rbac.authorization.k8s.io
 roleRef:
-  kind: ClusterRole
+  kind: Role
   name: $ROLE_NAME
   apiGroup: rbac.authorization.k8s.io
 EOF
 
-# Step 4: Retrieve the Service Account Token
-echo "Retrieving the token for service account $SERVICE_ACCOUNT..."
-SECRET_NAME=$(kubectl -n $NAMESPACE get secret | grep $SERVICE_ACCOUNT-token | awk '{print $1}')
-TOKEN=$(kubectl -n $NAMESPACE describe secret $SECRET_NAME | grep "token:" | awk '{print $2}')
-
-# Step 5: Get the Kubernetes API server URL and Certificate
+# Step 4: Retrieve the Kubernetes API server URL and Certificate
 APISERVER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
 CA_CERTIFICATE=$(kubectl config view --minify --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
 
-# Step 6: Generate kubeconfig file
+# Step 5: Generate kubeconfig file
 echo "Generating kubeconfig file..."
 cat <<EOF > $KUBECONFIG_FILE
 apiVersion: v1
@@ -92,18 +68,23 @@ contexts:
 - context:
     cluster: kubernetes
     namespace: $NAMESPACE
-    user: $SERVICE_ACCOUNT
+    user: $USERNAME
   name: aem-context
 current-context: aem-context
 users:
-- name: $SERVICE_ACCOUNT
+- name: $USERNAME
   user:
-    token: $TOKEN
+    # User certificate or token should go here. For simplicity, we'll assume user has already been authenticated.
+    # If using certificates, specify the paths to the certificate and key:
+    # client-certificate: /path/to/cert
+    # client-key: /path/to/key
+    # Or if using a token, specify the token:
+    # token: YOUR_USER_TOKEN
 EOF
 
 echo "kubeconfig file generated at $KUBECONFIG_FILE"
 
-# Step 7: Verify kubeconfig access
+# Step 6: Verify kubeconfig access
 export KUBECONFIG=$KUBECONFIG_FILE
 echo "Verifying access with the generated kubeconfig..."
 kubectl create deployment nginx --image=nginx -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
@@ -122,4 +103,3 @@ kubectl get horizontalpodautoscalers -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
 kubectl get cronjobs -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
 kubectl get jobs -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
 kubectl delete deployment nginx -n $NAMESPACE --kubeconfig=$KUBECONFIG_FILE
-

@@ -58,3 +58,12 @@ These components work together to provide a robust and scalable platform for dep
 | **ReplicaSet** | Ensures that a specified number of Pod replicas are running at all times.  | Maintaining a stable set of replica Pods.                   | Automatically scales Pods based on defined replicas. | No persistent identity, manages Pods by label selector. | Unique IP per Pod.            |
 | **DaemonSet**  | Ensures that all (or some) Nodes run a copy of a Pod.                      | Running a service on all nodes, like monitoring or logging. | Automatically scales based on Nodes. | Unique Pod per Node, maintains identity. | Unique IP per Pod.            |
 | **StatefulSet**| Manages the deployment and scaling of a set of Pods, providing guarantees about the ordering and uniqueness of these Pods. | Stateful applications, like databases, requiring stable identity and storage. | Manual scaling; Pods are created in order. | Stable identity across restarts, unique ordinal index. | Stable network identity; DNS for each Pod. |
+
+
+
+## Usefull commands 
+
+**update release image**
+```bash
+sed -i "s|image: .*|image: nginx:1.14.3|" deployment.yaml
+```
